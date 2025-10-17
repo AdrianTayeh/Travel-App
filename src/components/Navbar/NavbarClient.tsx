@@ -10,7 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { signOut } from "next-auth/react";
+import { signOut } from "@/auth";
 import { signInWithGoogle } from "@/lib/auth-actions";
 import type { User } from "@auth/core/types";
 import Link from "next/link";
