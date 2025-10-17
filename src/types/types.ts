@@ -5,6 +5,7 @@ export type Continent =
   | "Americas"
   | "Asia"
   | "Europe"
+  | "Antarctic"
   | "Oceania"
   | "All";
 
@@ -49,4 +50,3 @@ export const WeatherSchema = z.object({
 
 export type Country = z.infer<typeof CountrySchema>;
 export type Weather = z.infer<typeof WeatherSchema>;
-

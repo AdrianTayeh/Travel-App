@@ -13,6 +13,7 @@ const continents: Continent[] = [
   "Asia",
   "Europe",
   "Oceania",
+  "Antarctic",
 ];
 
 export function ContinentFilters({
