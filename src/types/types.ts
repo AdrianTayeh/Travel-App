@@ -36,6 +36,9 @@ export const CountrySchema = z.object({
     )
     .optional(),
   latlng: z.array(z.number()).optional(),
+  capitalInfo: z.object({
+    latlng: z.array(z.number()).optional(),
+  }).optional(),
   continents: z.array(z.string()).optional(),
 });
 

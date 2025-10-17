@@ -34,7 +34,7 @@ export function CountriesListClient({
   // Helper function to build URLs while preserving existing parameters
   const buildUrl = (updates: Record<string, string | number | boolean>) => {
     const newSearchParams = new URLSearchParams(searchParams.toString());
-    
+
     Object.entries(updates).forEach(([key, value]) => {
       if (value === "" || value === false || value === "All") {
         newSearchParams.delete(key);
@@ -42,7 +42,7 @@ export function CountriesListClient({
         newSearchParams.set(key, value.toString());
       }
     });
-    
+
     return `?${newSearchParams.toString()}`;
   };
 
@@ -68,17 +68,18 @@ export function CountriesListClient({
     }
 
     if (selectedContinent !== "All") {
-      filtered = filtered.filter((country) =>
-        country.region === selectedContinent
+      filtered = filtered.filter(
+        (country) => country.region === selectedContinent
       );
     }
 
     if (sortByDistance && userLocation) {
       filtered = [...filtered].sort((a, b) => {
-        const aLat = a.latlng?.[0];
-        const aLon = a.latlng?.[1];
-        const bLat = b.latlng?.[0];
-        const bLon = b.latlng?.[1];
+        // Try to use capital coordinates first, fallback to country center
+        const aLat = a.capitalInfo?.latlng?.[0] ?? a.latlng?.[0];
+        const aLon = a.capitalInfo?.latlng?.[1] ?? a.latlng?.[1];
+        const bLat = b.capitalInfo?.latlng?.[0] ?? b.latlng?.[0];
+        const bLon = b.capitalInfo?.latlng?.[1] ?? b.latlng?.[1];
 
         if (!aLat || !aLon) return 1;
         if (!bLat || !bLon) return -1;
@@ -95,6 +96,7 @@ export function CountriesListClient({
           bLat,
           bLon
         );
+
         return distA - distB;
       });
     }
@@ -122,7 +124,9 @@ export function CountriesListClient({
           <SearchBar
             value={searchQuery}
             onChange={(q) => {
-              router.replace(buildUrl({ query: q, page: 1 }), { scroll: false });
+              router.replace(buildUrl({ query: q, page: 1 }), {
+                scroll: false,
+              });
             }}
           />
           <div className="flex items-center gap-2">
@@ -139,12 +143,15 @@ export function CountriesListClient({
               <Button
                 variant={sortByDistance ? "default" : "outline"}
                 onClick={() =>
-                  router.replace(buildUrl({ sortByDistance: !sortByDistance, page: 1 }), {
-                    scroll: false,
-                  })
+                  router.replace(
+                    buildUrl({ sortByDistance: !sortByDistance, page: 1 }),
+                    {
+                      scroll: false,
+                    }
+                  )
                 }
               >
-                {sortByDistance ? "Sorted by distance" : "Sort by distance"}
+                {sortByDistance ? "Sorted by closest capital" : "Sort by closes capital"}
               </Button>
             )}
           </div>
@@ -153,7 +160,9 @@ export function CountriesListClient({
         <ContinentFilters
           selected={selectedContinent}
           onSelect={(continent) =>
-            router.replace(buildUrl({ region: continent, page: 1 }), { scroll: false })
+            router.replace(buildUrl({ region: continent, page: 1 }), {
+              scroll: false,
+            })
           }
         />
       </div>
@@ -214,7 +223,9 @@ export function CountriesListClient({
                   key={pageNum}
                   variant={currentPage === pageNum ? "default" : "outline"}
                   onClick={() =>
-                    router.replace(buildUrl({ page: pageNum }), { scroll: false })
+                    router.replace(buildUrl({ page: pageNum }), {
+                      scroll: false,
+                    })
                   }
                   className="w-10"
                 >
@@ -227,9 +238,12 @@ export function CountriesListClient({
           <Button
             variant="outline"
             onClick={() =>
-              router.replace(buildUrl({ page: Math.min(totalPages, currentPage + 1) }), {
-                scroll: false,
-              })
+              router.replace(
+                buildUrl({ page: Math.min(totalPages, currentPage + 1) }),
+                {
+                  scroll: false,
+                }
+              )
             }
             disabled={currentPage === totalPages}
           >

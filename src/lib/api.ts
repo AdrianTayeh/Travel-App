@@ -1,7 +1,7 @@
 import type { Country } from "@/types/types";
 
 export async function fetchCountries(): Promise<Country[]> {
-  const res = await fetch("https://restcountries.com/v3.1/all?fields=region,capital,population,name,flags,latlng,cca3", {
+  const res = await fetch("https://restcountries.com/v3.1/all?fields=region,capital,population,name,flags,latlng,cca3,capitalInfo", {
     next: { revalidate: 60 * 10 },
   });
 
