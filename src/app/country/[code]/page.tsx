@@ -12,6 +12,9 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { FavoriteButton } from "../FavoriteButton";
 import Link from "next/link";
+import { Card } from "@/components/ui/card";
+import Image from "next/image";
+import { Badge } from "@/components/ui/badge";
 
 interface CountryPageProps {
   params: {
@@ -144,6 +147,15 @@ export default async function CountryPage({
         return `using country center coordinates`;
       })()
     : null;
+
+  const coordsSource: "capital" | "country" | undefined =
+    searchParams?.lat && searchParams?.lon
+      ? "capital"
+      : country.capitalInfo?.latlng && country.capitalInfo.latlng.length >= 2
+      ? "capital"
+      : usedCoords
+      ? "country"
+      : undefined;
   return (
     <div className="container mx-auto px-4 py-8 space-y-8">
       {/* Header */}
@@ -158,6 +170,38 @@ export default async function CountryPage({
           <FavoriteButton countryCode={country.cca3} />
         </Suspense>
       </div>
+
+      {/* Flag and Title */}
+      <Card className="overflow-hidden">
+        <div className="grid md:grid-cols-2 gap-6 p-6">
+          <div className="aspect-video bg-gray-100 rounded-lg overflow-hidden">
+            <Image
+              src={country.flags.svg}
+              alt={country.flags.alt || `Flag of ${country.name.common}`}
+              width={400}
+              height={300}
+              className="w-full h-full object-cover"
+            />
+          </div>
+
+          <div className="flex flex-col justify-center space-y-4">
+            <div>
+              <h1 className="text-3xl font-bold">{country.name.common}</h1>
+              <p className="text-gray-600 text-lg">{country.name.official}</p>
+            </div>
+
+            {country.continents && country.continents.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {country.continents.map((continent: string) => (
+                  <Badge key={continent} variant="secondary">
+                    {continent}
+                  </Badge>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </Card>
     </div>
   );
 }

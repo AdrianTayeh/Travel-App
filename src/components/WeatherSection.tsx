@@ -12,11 +12,15 @@ import Image from "next/image";
 interface WeatherSectionProps {
   country: Country;
   countryWeather?: Weather;
+  coordsSource?: "capital" | "country" | undefined;
+  capitalName?: string | undefined;
 }
 
 export function WeatherSection({
   country,
   countryWeather,
+  coordsSource,
+  capitalName,
 }: WeatherSectionProps) {
   const [userLocation, setUserLocation] = useState<{
     lat: number;
@@ -26,8 +30,9 @@ export function WeatherSection({
   const [isUserWeatherLoading, setIsUserWeatherLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const capitalLat = country.latlng?.[0];
-  const capitalLon = country.latlng?.[1];
+  // prefer capitalInfo.latlng for the capital coordinates when available
+  const capitalLat = country.capitalInfo?.latlng?.[0] ?? country.latlng?.[0];
+  const capitalLon = country.capitalInfo?.latlng?.[1] ?? country.latlng?.[1];
 
   const handleUserLocation = async (lat: number, lon: number) => {
     setUserLocation({ lat, lon });
@@ -65,7 +70,14 @@ export function WeatherSection({
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Cloud className="w-5 h-5" />
-          Weather Information
+          <span>Weather Information</span>
+
+          {coordsSource === "capital" && capitalName && (
+            <span className="ml-2 inline-flex items-center gap-2 bg-slate-100 text-slate-800 text-sm px-2 py-0.5 rounded-md">
+              <MapPin className="w-4 h-4 text-sky-600" />
+              <span className="font-medium">{capitalName}</span>
+            </span>
+          )}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
