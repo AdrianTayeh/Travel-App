@@ -20,9 +20,11 @@ export function FavoriteButton({ countryCode }: FavoriteButtonProps) {
 
   const toggleFavorite = () => {
     const favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
-    
+
     if (isFavorite) {
-      const newFavorites = favorites.filter((code: string) => code !== countryCode);
+      const newFavorites = favorites.filter(
+        (code: string) => code !== countryCode
+      );
       localStorage.setItem("favorites", JSON.stringify(newFavorites));
       setIsFavorite(false);
     } else {
@@ -33,7 +35,9 @@ export function FavoriteButton({ countryCode }: FavoriteButtonProps) {
   };
 
   if (isLoading) {
-    return <div className="h-10 w-32 bg-gray-200 animate-pulse rounded-md"></div>;
+    return (
+      <div className="h-10 w-32 bg-gray-200 animate-pulse rounded-md"></div>
+    );
   }
 
   return (

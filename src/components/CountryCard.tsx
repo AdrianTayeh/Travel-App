@@ -12,8 +12,8 @@ export function CountryCard({ country }: CountryCardProps) {
   const detailUrl =
     `/country/${country.cca3}?` +
     new URLSearchParams({
-      lat: country.latlng?.[0]?.toString() || "",
-      lon: country.latlng?.[1]?.toString() || "",
+      lat: country.capitalInfo?.latlng?.[0]?.toString() || "",
+      lon: country.capitalInfo?.latlng?.[1]?.toString() || "",
       name: country.name.common,
       capital: country.capital?.[0] || "",
       region: country.region,
