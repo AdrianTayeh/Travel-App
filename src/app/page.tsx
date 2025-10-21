@@ -1,5 +1,5 @@
 import { fetchCountries } from "@/lib/api";
-import { CountriesListClient } from "./countries/CountriesListClient";
+import { CountriesListClient } from "../components/CountriesListClient";
 
 export default async function Home() {
   const countries = await fetchCountries();

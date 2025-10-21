@@ -44,12 +44,50 @@ export const CountrySchema = z.object({
 
 export const WeatherSchema = z.object({
   current: z.object({
-    temperature_2m: z.number(),
-    weathercode: z.number(),
-    windspeed_10m: z.number(),
-    relative_humidity_2m: z.number(),
+    temp: z.number(),
+    humidity: z.number(),
+    wind_speed: z.number(),
+    weather: z.array(
+      z.object({
+        main: z.string(),
+        description: z.string(),
+        icon: z.string(),
+      })
+    ),
   }),
+});
+
+export const WikipediaSchema = z.object({
+  title: z.string(),
+  extract: z.string(),
+  thumbnail: z.object({
+    source: z.string(),
+    width: z.number(),
+    height: z.number(),
+  }).optional(),
+});
+
+export const UnsplashPhotoSchema = z.object({
+  id: z.string(),
+  urls: z.object({
+    regular: z.string(),
+    small: z.string(),
+    thumb: z.string(),
+  }),
+  alt_description: z.string().nullable(),
+  user: z.object({
+    name: z.string(),
+    username: z.string(),
+  }),
+});
+
+export const UnsplashSearchSchema = z.object({
+  results: z.array(UnsplashPhotoSchema),
+  total: z.number(),
 });
 
 export type Country = z.infer<typeof CountrySchema>;
 export type Weather = z.infer<typeof WeatherSchema>;
+export type WikipediaSummary = z.infer<typeof WikipediaSchema>;
+export type UnsplashPhoto = z.infer<typeof UnsplashPhotoSchema>;
+export type UnsplashSearchResult = z.infer<typeof UnsplashSearchSchema>;

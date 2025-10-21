@@ -10,7 +10,7 @@ interface CountryCardProps {
 
 export function CountryCard({ country }: CountryCardProps) {
   const detailUrl =
-    `/countries/${country.cca3}?` +
+    `/country/${country.cca3}?` +
     new URLSearchParams({
       lat: country.latlng?.[0]?.toString() || "",
       lon: country.latlng?.[1]?.toString() || "",
