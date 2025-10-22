@@ -109,5 +109,5 @@ Recommended: Vercel — first-class support for Next.js.
 
 ## Contact / Links
 
-- Repository: (Github Repo)[https://github.com/AdrianTayeh/]Travel-App
-- Deployed app: (Vercel Deployment)[https://travel-app-six-tan.vercel.app/]
+- Repository: [Github Repo](https://github.com/AdrianTayeh/Travel-App)
+- Deployed app: [Vercel Deployment](https://travel-app-six-tan.vercel.app/)
