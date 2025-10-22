@@ -5,7 +5,7 @@ import { Cloud, Droplets, Wind, MapPin, Loader2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Skeleton } from "./ui/skeleton";
 import { GeolocationButton } from "./GeolocationButton";
-import { fetchWeather, getWeatherDescription } from "../lib/api";
+import { getWeatherDescription } from "../lib/api";
 import type { Country, Weather } from "../types/types";
 import Image from "next/image";
 
@@ -40,7 +40,9 @@ export function WeatherSection({
     setError(null);
 
     try {
-      const weather = await fetchWeather(lat, lon);
+      const res = await fetch(`/api/weather?lat=${lat}&lon=${lon}`);
+      if (!res.ok) throw new Error("Failed to fetch user weather");
+      const weather = await res.json();
       setUserWeather(weather);
     } catch (err) {
       setError("Failed to load your weather data");

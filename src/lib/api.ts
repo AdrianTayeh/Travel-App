@@ -1,4 +1,9 @@
-import type { Country, Weather, WikipediaSummary, UnsplashSearchResult } from "@/types/types";
+import type {
+  Country,
+  Weather,
+  WikipediaSummary,
+  UnsplashSearchResult,
+} from "@/types/types";
 
 export async function fetchCountries(): Promise<Country[]> {
   const res = await fetch(
@@ -32,14 +37,46 @@ export async function fetchWeather(lat: number, lon: number): Promise<Weather> {
   }
 
   const res = await fetch(
-    `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&exclude=minutely,hourly,daily,alerts`,
+    `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`,
     {
       next: { revalidate: 60 * 5 },
     }
   );
 
-  if (!res.ok) throw new Error("Failed to fetch weather");
-  return res.json();
+  if (!res.ok) {
+    let bodyText: string;
+    try {
+      bodyText = await res.text();
+    } catch {
+      bodyText = "<unable to read response body>";
+    }
+    throw new Error(
+      `Failed to fetch weather: ${res.status} ${res.statusText} - ${bodyText}`
+    );
+  }
+
+  const d = await res.json();
+
+  const mapped: Weather = {
+    current: {
+      temp: d?.main?.temp ?? 0,
+      humidity: d?.main?.humidity ?? 0,
+      wind_speed: d?.wind?.speed ?? 0,
+      weather:
+        Array.isArray(d?.weather) && d.weather.length
+          ? (d.weather as unknown[]).map((w) => {
+              const item = w as Record<string, unknown>;
+              return {
+                main: (item.main as string) ?? "",
+                description: (item.description as string) ?? "",
+                icon: (item.icon as string) ?? "",
+              };
+            })
+          : [{ main: "", description: "", icon: "" }],
+    },
+  };
+
+  return mapped;
 }
 
 export function getWeatherDescription(
@@ -70,7 +107,9 @@ export function calculateDistance(
   return R * c;
 }
 
-export async function fetchWikipediaSummary(country: string): Promise<WikipediaSummary> {
+export async function fetchWikipediaSummary(
+  country: string
+): Promise<WikipediaSummary> {
   const encodedCountry = encodeURIComponent(country);
   const res = await fetch(
     `https://en.wikipedia.org/api/rest_v1/page/summary/${encodedCountry}`,
@@ -83,7 +122,9 @@ export async function fetchWikipediaSummary(country: string): Promise<WikipediaS
   return res.json();
 }
 
-export async function fetchUnsplashImages(country: string): Promise<UnsplashSearchResult> {
+export async function fetchUnsplashImages(
+  country: string
+): Promise<UnsplashSearchResult> {
   const accessKey = process.env.UNSPLASH_ACCESS_KEY;
   if (!accessKey) {
     throw new Error("Unsplash access key not found");
@@ -100,4 +141,3 @@ export async function fetchUnsplashImages(country: string): Promise<UnsplashSear
   if (!res.ok) throw new Error("Failed to fetch Unsplash images");
   return res.json();
 }
-

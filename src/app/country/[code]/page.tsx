@@ -22,6 +22,7 @@ import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
+import { WeatherSection } from "@/components/WeatherSection";
 
 interface CountryPageProps {
   params: {
@@ -111,12 +112,15 @@ export default async function CountryPage({
   params,
   searchParams,
 }: CountryPageProps) {
-  const { code } = params;
-  const countryName = searchParams.name || "";
+  const awaitedParams = await params;
+  const awaitedSearchParams = await searchParams;
+
+  const { code } = awaitedParams;
+  const countryName = awaitedSearchParams?.name || "";
 
   const data = await fetchAllCountryData(code, countryName, {
-    lat: searchParams.lat,
-    lon: searchParams.lon,
+    lat: awaitedSearchParams?.lat,
+    lon: awaitedSearchParams?.lon,
   });
 
   if (!data?.country) {
@@ -142,21 +146,9 @@ export default async function CountryPage({
         )
         .join(", ")
     : "N/A";
-  const coordsLabel = usedCoords
-    ? (() => {
-        if (searchParams?.lat && searchParams?.lon)
-          return `using coordinates from URL`;
-        if (
-          country.capitalInfo?.latlng &&
-          country.capitalInfo.latlng.length >= 2
-        )
-          return `using capital coordinates`;
-        return `using country center coordinates`;
-      })()
-    : null;
 
   const coordsSource: "capital" | "country" | undefined =
-    searchParams?.lat && searchParams?.lon
+    awaitedSearchParams?.lat && awaitedSearchParams?.lon
       ? "capital"
       : country.capitalInfo?.latlng && country.capitalInfo.latlng.length >= 2
       ? "capital"
@@ -262,6 +254,14 @@ export default async function CountryPage({
           </div>
         </CardContent>
       </Card>
+
+      {/* Weather Section */}
+      <WeatherSection
+        country={country}
+        countryWeather={countryWeather || undefined}
+        coordsSource={coordsSource}
+        capitalName={awaitedSearchParams?.capital || country.capital?.[0]}
+      />
     </div>
   );
 }
