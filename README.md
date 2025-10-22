@@ -1,36 +1,113 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Travel-App
 
-## Getting Started
+A small Next.js (App Router) demo app displaying country data, images, and weather — built with TypeScript, Tailwind CSS, ShadCN, and NextAuth for optional auth.
 
-First, run the development server:
+This README explains how to run the project locally, which external data sources the app integrates with, which environment variables are required, and how to deploy.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Quick start (local)
+
+1. Install dependencies
+
+```fish
+# if you use npm
+npm install
+
+# or pnpm
+pnpm install
+
+# or yarn
+yarn install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Create a `.env.local` in the repository root and add the required secrets (see the Environment variables section below).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Run the dev server
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```fish
+pnpm dev
+# or npm run dev
+# or yarn dev
+```
 
-## Learn More
+4. Open http://localhost:3000 in your browser.
 
-To learn more about Next.js, take a look at the following resources:
+Notes:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- The app uses the Next.js App Router; pages under `src/app` are mostly Server Components. Keep API keys and secrets in `.env.local` — they are accessed server-side only.
+- If you change middleware or auth config, restart the dev server to apply middleware matcher changes.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Data sources & third-party integrations
 
-## Deploy on Vercel
+The project consumes the following external APIs (server-side fetch helpers are in `src/lib/api.ts`):
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- REST Countries API — country metadata, flags, capitals, regions, etc.
+- Unsplash Search API — images for country galleries. The app hotlinks images using the URLs returned by Unsplash.
+- OpenWeatherMap Current Weather Data API — current weather for a set of coordinates. The server fetcher maps the OpenWeather response into the app's `Weather` shape and the client calls a server proxy (`/api/weather`) to avoid exposing the API key.
+- Wikipedia REST summary endpoint — a short extract for country pages.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The code that calls these services lives in `src/lib/api.ts` and is executed server-side (or via server routes) so API keys remain secret.
+
+## Environment variables
+
+Create a `.env.local` with at least the following values (example names used in the codebase):
+
+```
+OPENWEATHERMAP_API_KEY=your_openweathermap_api_key
+UNSPLASH_ACCESS_KEY=your_unsplash_access_key
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=some_long_random_value
+# If you use Google OAuth for NextAuth
+GOOGLE_CLIENT_ID=...
+GOOGLE_CLIENT_SECRET=...
+```
+
+Notes:
+
+- Keep these secrets out of version control. The app expects the weather and Unsplash keys to live server-side.
+- If you deploy to Vercel, set the same environment variables in the Vercel project settings.
+
+## Running tests / typechecks
+
+This project uses TypeScript. Run a typecheck with:
+
+```fish
+npm tsc --noEmit
+```
+
+If you have ESLint configured, run:
+
+```fish
+npm lint
+```
+
+## Accessibility & best practices
+
+The UI has basic accessibility considerations (semantic headings, alt text fallback for flags and images). Recommended next steps:
+
+- Add a skip-to-content link in `src/app/layout.tsx` for keyboard users.
+- Add `aria-pressed` on toggle controls (favorite button) and `aria-live`/`role="alert"` on error messages.
+- Run Lighthouse / axe to catch additional issues.
+
+## Deploying
+
+Recommended: Vercel — first-class support for Next.js.
+
+1. Push your branch to GitHub.
+2. Import the repository on Vercel and configure the environment variables from the Environment variables section.
+3. Vercel will build and deploy the app automatically. For custom domains, configure them via the Vercel dashboard.
+
+## Troubleshooting
+
+- If weather calls return 401, ensure `OPENWEATHERMAP_API_KEY` is set and the server proxy (`/api/weather`) is used for client-side requests.
+
+## Project structure (high level)
+
+- `src/app` — Next.js App Router pages and layout
+- `src/components` — UI and client components (Navbar, SearchBar, CountryCard, WeatherSection, etc.)
+- `src/lib` — server-side fetch helpers and utilities
+- `src/app/api` — server routes (for example `/api/weather`)
+
+## Contact / Links
+
+- Repository: (Github Repo)[https://github.com/AdrianTayeh/]Travel-App
+- Deployed app: (Vercel Deployment)[https://travel-app-six-tan.vercel.app/]
