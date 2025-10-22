@@ -262,6 +262,70 @@ export default async function CountryPage({
         coordsSource={coordsSource}
         capitalName={awaitedSearchParams?.capital || country.capital?.[0]}
       />
+
+      {/* Wikipedia Summary & Images */}
+      <Card>
+        <CardContent className="p-6 text-gray-500">
+          <h2 className="tetx-2xl font-semibold">
+            Discover {country.name.common}
+          </h2>
+          <div className="prose max-w-none">
+            {wikipediaSummary ? (
+              <>
+                <p className="text-gray-700 leading-relaxed">
+                  {wikipediaSummary.extract}
+                </p>
+                <p className="text-sm text-gray-500 mt-4">
+                  <a
+                    href={`https://en.wikipedia.org/wiki/${country.name.common.replace(
+                      / /g,
+                      "_"
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:underline"
+                  >
+                    Read more on Wikipedia →
+                  </a>
+                </p>
+              </>
+            ) : (
+              <>
+                <p className="text-gray-700 leading-relaxed">
+                  {country.name.common} is a country located in {country.region}
+                  {country.subregion &&
+                    `, specifically in ${country.subregion}`}
+                  . With a population of {country.population.toLocaleString()},
+                  it is known for its rich cultural heritage and diverse
+                  landscapes.{" "}
+                  {country.capital?.[0] && (
+                    <>
+                      The capital city is {country.capital[0]}, which serves as
+                      the political and economic center of the nation.
+                    </>
+                  )}{" "}
+                  {country.name.common} offers travelers a unique blend of
+                  history, culture, and natural beauty, making it a fascinating
+                  destination to explore.
+                </p>
+                <p className="text-sm text-gray-500 mt-4">
+                  <a
+                    href={`https://en.wikipedia.org/wiki/${country.name.common.replace(
+                      / /g,
+                      "_"
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:underline"
+                  >
+                    Learn more on Wikipedia →
+                  </a>
+                </p>
+              </>
+            )}
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
