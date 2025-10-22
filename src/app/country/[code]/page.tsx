@@ -7,12 +7,19 @@ import {
 import { Country } from "@/types/types";
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
+import {
+  ArrowLeft,
+  Coins,
+  Globe,
+  Languages,
+  MapPin,
+  Users,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { FavoriteButton } from "../FavoriteButton";
 import Link from "next/link";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 
@@ -201,6 +208,59 @@ export default async function CountryPage({
             )}
           </div>
         </div>
+      </Card>
+
+      {/* Basic Facts */}
+      <Card>
+        <CardContent className="p-6">
+          <h2 className="text-2x font-semibold mb-6">Basic Information</h2>
+          <div className="grid sm:grid-cols-2 gap-6">
+            <div className="flex items-start gap-3">
+              <MapPin className="w-5 h-5 text-blue-600 mt-1" />
+              <div>
+                <p className="text-sm text-gray-600">Region</p>
+                <p className="font-medium">{country.region}</p>
+                {country.subregion && (
+                  <p className="text-sm text-gray-500">{country.subregion}</p>
+                )}
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3">
+              <Globe className="w-5 h-5 text-blue-600 mt-1" />
+              <div>
+                <p className="text-sm text-gray-600">Capital</p>
+                <p className="font-medium">{country.capital?.[0] || "N/A"}</p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3">
+              <Users className="w-5 h-5 text-blue-600 mt-1" />
+              <div>
+                <p className="text-sm text-gray-600">Population</p>
+                <p className="font-medium">
+                  {country.population.toLocaleString()}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3">
+              <Languages className="w-5 h-5 text-blue-600 mt-1" />
+              <div>
+                <p className="text-sm text-gray-600">Languages</p>
+                <p className="text-sm font-medium">{languages}</p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3 sm:col-span-2">
+              <Coins className="w-5 h-5 text-blue-600 mt-1" />
+              <div>
+                <p className="text-sm text-gray-600">Currencies</p>
+                <p className="text-sm font-medium">{currencies}</p>
+              </div>
+            </div>
+          </div>
+        </CardContent>
       </Card>
     </div>
   );
