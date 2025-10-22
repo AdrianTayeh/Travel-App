@@ -36,9 +36,11 @@ export const CountrySchema = z.object({
     )
     .optional(),
   latlng: z.array(z.number()).optional(),
-  capitalInfo: z.object({
-    latlng: z.array(z.number()).optional(),
-  }).optional(),
+  capitalInfo: z
+    .object({
+      latlng: z.array(z.number()).optional(),
+    })
+    .optional(),
   continents: z.array(z.string()).optional(),
 });
 
@@ -60,11 +62,13 @@ export const WeatherSchema = z.object({
 export const WikipediaSchema = z.object({
   title: z.string(),
   extract: z.string(),
-  thumbnail: z.object({
-    source: z.string(),
-    width: z.number(),
-    height: z.number(),
-  }).optional(),
+  thumbnail: z
+    .object({
+      source: z.string(),
+      width: z.number(),
+      height: z.number(),
+    })
+    .optional(),
 });
 
 export const UnsplashPhotoSchema = z.object({
@@ -73,6 +77,7 @@ export const UnsplashPhotoSchema = z.object({
     regular: z.string(),
     small: z.string(),
     thumb: z.string(),
+    raw: z.string(),
   }),
   alt_description: z.string().nullable(),
   user: z.object({
@@ -84,6 +89,13 @@ export const UnsplashPhotoSchema = z.object({
 export const UnsplashSearchSchema = z.object({
   results: z.array(UnsplashPhotoSchema),
   total: z.number(),
+  meta: z
+    .object({
+      link: z.string().optional(),
+      xRatelimitLimit: z.string().optional(),
+      xRatelimitRemaining: z.string().optional(),
+    })
+    .optional(),
 });
 
 export type Country = z.infer<typeof CountrySchema>;

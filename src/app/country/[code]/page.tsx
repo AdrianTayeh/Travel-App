@@ -23,6 +23,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { WeatherSection } from "@/components/WeatherSection";
+import { CountryImages } from "../CountryImages";
 
 interface CountryPageProps {
   params: {
@@ -324,6 +325,18 @@ export default async function CountryPage({
               </>
             )}
           </div>
+
+          <Suspense
+            fallback={
+              <div className="grid md:grid-cols-3 gap-4 pt-6">
+                {[...Array(3)].map((_, i) => (
+                  <Skeleton key={i} className="aspect-square rounded-lg" />
+                ))}
+              </div>
+            }
+          >
+            <CountryImages country={country} unsplashImages={unsplashImages} />
+          </Suspense>
         </CardContent>
       </Card>
     </div>

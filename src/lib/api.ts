@@ -139,5 +139,19 @@ export async function fetchUnsplashImages(
   );
 
   if (!res.ok) throw new Error("Failed to fetch Unsplash images");
-  return res.json();
+  const data = await res.json();
+
+  // Attach relevant headers (Link and rate-limit info) where available
+  const link = res.headers.get("Link") ?? undefined;
+  const rateLimit = res.headers.get("X-Ratelimit-Limit") ?? undefined;
+  const rateRemaining = res.headers.get("X-Ratelimit-Remaining") ?? undefined;
+
+  return {
+    ...data,
+    meta: {
+      link,
+      xRatelimitLimit: rateLimit,
+      xRatelimitRemaining: rateRemaining,
+    },
+  } as UnsplashSearchResult;
 }
