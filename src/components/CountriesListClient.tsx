@@ -182,7 +182,7 @@ export function CountriesListClient({
         </div>
       ) : paginatedCountries.length === 0 ? (
         <div className="text-center py-12">
-          <p className="text-gray-600">
+          <p className="text-gray-600" role="status">
             No countries found matching your criteria.
           </p>
         </div>

@@ -153,7 +153,9 @@ export function WeatherSection({
           {isUserWeatherLoading && (
             <div className="flex items-center gap-2 text-gray-600">
               <Loader2 className="w-4 h-4 animate-spin" />
-              <span className="text-sm">Loading your weather...</span>
+              <span className="text-sm" aria-live="polite">
+                Loading your weather...
+              </span>
             </div>
           )}
 

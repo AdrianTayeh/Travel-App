@@ -157,7 +157,7 @@ export default async function CountryPage({
       ? "country"
       : undefined;
   return (
-    <div className="container mx-auto px-4 py-8 space-y-8">
+    <main id="main-content" className="container mx-auto px-4 py-8 space-y-8">
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-4">
         <Link href="/">
@@ -339,6 +339,6 @@ export default async function CountryPage({
           </Suspense>
         </CardContent>
       </Card>
-    </div>
+    </main>
   );
 }

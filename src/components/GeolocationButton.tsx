@@ -39,7 +39,7 @@ export function GeolocationButton({
   };
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-2" role="status">
       <Button
         onClick={handleGetLocation}
         variant="outline"
