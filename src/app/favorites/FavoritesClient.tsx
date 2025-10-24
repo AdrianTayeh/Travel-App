@@ -8,21 +8,23 @@ import type { Country } from "@/types/types";
 
 interface FavoritesClientProps {
   countries: Country[];
+  userId?: string | null;
 }
 
-export default function FavoritesClient({ countries }: FavoritesClientProps) {
+export default function FavoritesClient({ countries, userId }: FavoritesClientProps) {
   const [favoriteIds, setFavoriteIds] = useState<string[] | null>(null);
 
   useEffect(() => {
     try {
-      const raw = localStorage.getItem("favorites");
+      const key = userId ? `favorites:${userId}` : "favorites";
+      const raw = localStorage.getItem(key);
       const ids = raw ? (JSON.parse(raw) as string[]) : [];
       setFavoriteIds(ids);
     } catch (e) {
       console.error("Failed reading favorites from localStorage:", e);
       setFavoriteIds([]);
     }
-  }, []);
+  }, [userId]);
 
   const favoriteCountries = useMemo(() => {
     if (!favoriteIds) return [];

@@ -24,6 +24,7 @@ import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { WeatherSection } from "@/components/WeatherSection";
 import { CountryImages } from "../CountryImages";
+import { auth } from "@/auth";
 
 interface CountryPageProps {
   params: {
@@ -124,6 +125,9 @@ export default async function CountryPage({
     lon: awaitedSearchParams?.lon,
   });
 
+  const session = await auth();
+  const userId = session?.user?.email ?? (session?.user?.id as string | undefined) ?? null;
+
   if (!data?.country) {
     notFound();
   }
@@ -167,7 +171,7 @@ export default async function CountryPage({
           </Button>
         </Link>
         <Suspense fallback={<Skeleton className="h-10 w-32" />}>
-          <FavoriteButton countryCode={country.cca3} />
+          <FavoriteButton countryCode={country.cca3} userId={userId} />
         </Suspense>
       </div>
 

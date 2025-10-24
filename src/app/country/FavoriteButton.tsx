@@ -6,30 +6,33 @@ import { Button } from "@/components/ui/button";
 
 interface FavoriteButtonProps {
   countryCode: string;
+  userId?: string | null;
 }
 
-export function FavoriteButton({ countryCode }: FavoriteButtonProps) {
+export function FavoriteButton({ countryCode, userId }: FavoriteButtonProps) {
   const [isFavorite, setIsFavorite] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
+    const key = userId ? `favorites:${userId}` : "favorites";
+    const favorites = JSON.parse(localStorage.getItem(key) || "[]");
     setIsFavorite(favorites.includes(countryCode));
     setIsLoading(false);
-  }, [countryCode]);
+  }, [countryCode, userId]);
 
   const toggleFavorite = () => {
-    const favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
+  const key = userId ? `favorites:${userId}` : "favorites";
+  const favorites = JSON.parse(localStorage.getItem(key) || "[]");
 
     if (isFavorite) {
       const newFavorites = favorites.filter(
         (code: string) => code !== countryCode
       );
-      localStorage.setItem("favorites", JSON.stringify(newFavorites));
+      localStorage.setItem(key, JSON.stringify(newFavorites));
       setIsFavorite(false);
     } else {
       const newFavorites = [...favorites, countryCode];
-      localStorage.setItem("favorites", JSON.stringify(newFavorites));
+      localStorage.setItem(key, JSON.stringify(newFavorites));
       setIsFavorite(true);
     }
   };
