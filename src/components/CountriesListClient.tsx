@@ -155,7 +155,7 @@ export function CountriesListClient({
     <main className="space-y-8">
       {/* Search and Filters */}
       <div className="space-y-6">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 justify-between">
+        <div className="flex flex-col sm:flex-row md:flex-row items-start sm:items-center md:items-center gap-4 justify-between">
           <SearchBar
             value={searchQuery}
             onChange={(q) => {
@@ -186,7 +186,9 @@ export function CountriesListClient({
                   )
                 }
               >
-                {sortByDistance ? "Sorted by closest capital" : "Sort by closes capital"}
+                {sortByDistance
+                  ? "Sorted by closest capital"
+                  : "Sort by closes capital"}
               </Button>
             )}
           </div>
@@ -204,7 +206,7 @@ export function CountriesListClient({
 
       {/* Results */}
       {isLoading ? (
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
           {Array.from({ length: 9 }).map((_, i) => (
             <div key={i} className="space-y-3">
               <Skeleton className="h-40 w-full rounded-xl" />
@@ -222,7 +224,7 @@ export function CountriesListClient({
           </p>
         </div>
       ) : (
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
           {paginatedCountries.map((country, index) => (
             <CountryCard key={`${country.cca3}-${index}`} country={country} />
           ))}

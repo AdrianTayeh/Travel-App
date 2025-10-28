@@ -38,14 +38,14 @@ export function NavbarClient({ user }: NavbarClientProps) {
             <Link href="/favorites">
               <Button variant="ghost" className="gap-2">
                 <Heart className="w-4 h-4" />
-                <span className="hidden sm:inline">My Favorites</span>
+                <span className="hidden sm:inline md:inline">My Favorites</span>
               </Button>
             </Link>
           )}
 
           {user ? (
             <div className="flex items-center gap-3">
-              <div className="hidden sm:flex items-center gap-2 px-3 py-2 bg-blue-50 rounded-lg">
+              <div className="hidden sm:flex md:flex items-center gap-2 px-3 py-2 bg-blue-50 rounded-lg">
                 <UserIcon className="w-4 h-4 text-blue-600" />
                 <span className="text-sm">
                   Logged in as {user.name || user.email || "User"}
@@ -57,7 +57,7 @@ export function NavbarClient({ user }: NavbarClientProps) {
                 className="gap-2"
               >
                 <LogOut className="w-4 h-4" />
-                <span className="hidden sm:inline">Logout</span>
+                <span className="hidden sm:inline md:inline">Logout</span>
               </Button>
             </div>
           ) : (

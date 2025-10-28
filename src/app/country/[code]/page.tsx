@@ -126,7 +126,8 @@ export default async function CountryPage({
   });
 
   const session = await auth();
-  const userId = session?.user?.email ?? (session?.user?.id as string | undefined) ?? null;
+  const userId =
+    session?.user?.email ?? (session?.user?.id as string | undefined) ?? null;
 
   if (!data?.country) {
     notFound();
@@ -211,7 +212,7 @@ export default async function CountryPage({
       <Card>
         <CardContent className="p-6">
           <h2 className="text-2x font-semibold mb-6">Basic Information</h2>
-          <div className="grid sm:grid-cols-2 gap-6">
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
             <div className="flex items-start gap-3">
               <MapPin className="w-5 h-5 text-blue-600 mt-1" />
               <div>
@@ -249,7 +250,7 @@ export default async function CountryPage({
               </div>
             </div>
 
-            <div className="flex items-start gap-3 sm:col-span-2">
+            <div className="flex items-start gap-3 sm:col-span-2 md:col-span-2">
               <Coins className="w-5 h-5 text-blue-600 mt-1" />
               <div>
                 <p className="text-sm text-gray-600">Currencies</p>
