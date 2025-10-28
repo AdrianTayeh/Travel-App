@@ -158,34 +158,30 @@ export function CountriesListClient({
             <GeolocationButton
               onLocation={(lat, lon) => {
                 setUserLocation({ lat, lon });
-                router.replace(
-                  buildSearchUrl(
-                    searchParams,
-                    { sortByDistance: true, page: 1 },
-                    { defaultPageSize: DEFAULT_PAGE_SIZE }
-                  ),
-                  {
-                    scroll: false,
-                  }
+                const qs = buildSearchUrl(
+                  searchParams,
+                  { sortByDistance: true, page: 1 },
+                  { defaultPageSize: DEFAULT_PAGE_SIZE }
                 );
+                router.replace(window.location.pathname + qs, {
+                  scroll: false,
+                });
               }}
               label="Near me"
             />
             {userLocation && (
               <Button
                 variant={sortByDistance ? "default" : "outline"}
-                onClick={() =>
-                  router.replace(
-                    buildSearchUrl(
-                      searchParams,
-                      { sortByDistance: !sortByDistance, page: 1 },
-                      { defaultPageSize: DEFAULT_PAGE_SIZE }
-                    ),
-                    {
-                      scroll: false,
-                    }
-                  )
-                }
+                onClick={() => {
+                  const qs = buildSearchUrl(
+                    searchParams,
+                    { sortByDistance: !sortByDistance, page: 1 },
+                    { defaultPageSize: DEFAULT_PAGE_SIZE }
+                  );
+                  router.replace(window.location.pathname + qs, {
+                    scroll: false,
+                  });
+                }}
               >
                 {sortByDistance
                   ? "Sorted by closest capital"
@@ -197,16 +193,14 @@ export function CountriesListClient({
 
         <ContinentFilters
           selected={selectedContinent}
-          onSelect={(continent) =>
-            router.replace(
-              buildSearchUrl(
-                searchParams,
-                { region: continent, page: 1 },
-                { defaultPageSize: DEFAULT_PAGE_SIZE }
-              ),
-              { scroll: false }
-            )
-          }
+          onSelect={(continent) => {
+            const qs = buildSearchUrl(
+              searchParams,
+              { region: continent, page: 1 },
+              { defaultPageSize: DEFAULT_PAGE_SIZE }
+            );
+            router.replace(window.location.pathname + qs, { scroll: false });
+          }}
         />
       </div>
 
@@ -242,16 +236,14 @@ export function CountriesListClient({
         <div className="flex items-center justify-center gap-2 pt-8">
           <Button
             variant="outline"
-            onClick={() =>
-              router.replace(
-                buildSearchUrl(
-                  searchParams,
-                  { page: Math.max(1, currentPage - 1) },
-                  { defaultPageSize: DEFAULT_PAGE_SIZE }
-                ),
-                { scroll: false }
-              )
-            }
+            onClick={() => {
+              const qs = buildSearchUrl(
+                searchParams,
+                { page: Math.max(1, currentPage - 1) },
+                { defaultPageSize: DEFAULT_PAGE_SIZE }
+              );
+              router.replace(window.location.pathname + qs, { scroll: false });
+            }}
             disabled={currentPage === 1}
           >
             Previous
@@ -270,16 +262,16 @@ export function CountriesListClient({
                 <Button
                   key={pageNum}
                   variant={currentPage === pageNum ? "default" : "outline"}
-                  onClick={() =>
-                    router.replace(
-                      buildSearchUrl(
-                        searchParams,
-                        { page: pageNum },
-                        { defaultPageSize: DEFAULT_PAGE_SIZE }
-                      ),
-                      { scroll: false }
-                    )
-                  }
+                  onClick={() => {
+                    const qs = buildSearchUrl(
+                      searchParams,
+                      { page: pageNum },
+                      { defaultPageSize: DEFAULT_PAGE_SIZE }
+                    );
+                    router.replace(window.location.pathname + qs, {
+                      scroll: false,
+                    });
+                  }}
                   className="w-10"
                 >
                   {pageNum}
@@ -290,16 +282,14 @@ export function CountriesListClient({
 
           <Button
             variant="outline"
-            onClick={() =>
-              router.replace(
-                buildSearchUrl(
-                  searchParams,
-                  { page: Math.min(totalPages, currentPage + 1) },
-                  { defaultPageSize: DEFAULT_PAGE_SIZE }
-                ),
-                { scroll: false }
-              )
-            }
+            onClick={() => {
+              const qs = buildSearchUrl(
+                searchParams,
+                { page: Math.min(totalPages, currentPage + 1) },
+                { defaultPageSize: DEFAULT_PAGE_SIZE }
+              );
+              router.replace(window.location.pathname + qs, { scroll: false });
+            }}
             disabled={currentPage === totalPages}
           >
             Next
