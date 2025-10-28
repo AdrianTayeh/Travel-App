@@ -89,9 +89,17 @@ export function CountriesListClient({
 
   useEffect(() => {
     setIsLoading(true);
-    const timeout = setTimeout(() => setIsLoading(false), 600); // small delay for UX
+    const timeout = setTimeout(() => setIsLoading(false), 600);
     return () => clearTimeout(timeout);
   }, [searchQuery, selectedContinent, currentPage, pageSize, sortByDistance]);
+
+  useEffect(() => {
+    const current = searchParams.get("pageSize");
+    const desired = pageSize.toString();
+    if (current !== desired) {
+      router.replace(buildUrlCb({ pageSize }), { scroll: false });
+    }
+  }, [pageSize, buildUrlCb, router, searchParams]);
 
   const filteredCountries = useMemo(() => {
     let filtered = [...initialCountries];
