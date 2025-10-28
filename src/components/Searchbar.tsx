@@ -21,7 +21,6 @@ export function SearchBar({ value, onChange }: SearchBarProps) {
         onChange={(e) => onChange(e.target.value)}
         className="pl-10 py-6"
         aria-label="Search countries"
-        aria-hidden="true"
       />
     </div>
   );

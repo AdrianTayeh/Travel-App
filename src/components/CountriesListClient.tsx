@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { SearchBar } from "@/components/Searchbar";
 import { ContinentFilters } from "@/components/ContintentFilters";
@@ -45,6 +45,41 @@ export function CountriesListClient({
 
     return `?${newSearchParams.toString()}`;
   };
+
+  const buildUrlCb = useCallback(
+    (updates: Record<string, string | number | boolean>) => {
+      const newSearchParams = new URLSearchParams(searchParams.toString());
+
+      Object.entries(updates).forEach(([key, value]) => {
+        if (value === "" || value === false || value === "All") {
+          newSearchParams.delete(key);
+        } else {
+          newSearchParams.set(key, value.toString());
+        }
+      });
+
+      return `?${newSearchParams.toString()}`;
+    },
+    [searchParams]
+  );
+
+  const [localQuery, setLocalQuery] = useState(searchQuery);
+
+  useEffect(() => {
+    setLocalQuery(searchQuery);
+  }, [searchQuery]);
+
+  useEffect(() => {
+    const handle = setTimeout(() => {
+      if (searchQuery !== localQuery) {
+        router.replace(buildUrlCb({ query: localQuery, page: 1 }), {
+          scroll: false,
+        });
+      }
+    }, 300);
+
+    return () => clearTimeout(handle);
+  }, [localQuery, searchQuery, buildUrlCb, router]);
 
   const [userLocation, setUserLocation] = useState<{
     lat: number;
