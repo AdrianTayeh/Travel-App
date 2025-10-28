@@ -35,3 +35,5 @@ Project layout
 - `src/app` — routes & server components
 - `src/components` — client UI
 - `src/lib` — server helpers & utilities
+
+[Deployed site](https://travel-app-six-tan.vercel.app/)
