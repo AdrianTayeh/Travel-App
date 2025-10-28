@@ -157,11 +157,9 @@ export function CountriesListClient({
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row md:flex-row items-start sm:items-center md:items-center gap-4 justify-between">
           <SearchBar
-            value={searchQuery}
+            value={localQuery}
             onChange={(q) => {
-              router.replace(buildUrl({ query: q, page: 1 }), {
-                scroll: false,
-              });
+              setLocalQuery(q);
             }}
           />
           <div className="flex items-center gap-2">
