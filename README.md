@@ -7,13 +7,13 @@ Quick start
 1. Install:
 
 ```fish
-pnpm install
+npm install
 ```
 
 1. Add `.env.local` (see Environment variables) and run:
 
 ```fish
-npm dev
+npm run dev
 ```
 
 1. Open [http://localhost:3000](http://localhost:3000)
