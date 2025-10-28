@@ -45,14 +45,13 @@ export function CountriesListClient({
   useEffect(() => {
     const handle = setTimeout(() => {
       if (searchQuery !== localQuery) {
-        router.replace(
-          buildSearchUrl(
-            searchParams,
-            { query: localQuery, page: 1 },
-            { defaultPageSize: DEFAULT_PAGE_SIZE }
-          ),
-          { scroll: false }
+        const qs = buildSearchUrl(
+          searchParams,
+          { query: localQuery, page: 1 },
+          { defaultPageSize: DEFAULT_PAGE_SIZE }
         );
+
+        router.replace(window.location.pathname + qs, { scroll: false });
       }
     }, 300);
 
@@ -67,7 +66,7 @@ export function CountriesListClient({
 
   useEffect(() => {
     setIsLoading(true);
-    const timeout = setTimeout(() => setIsLoading(false), 600);
+    const timeout = setTimeout(() => setIsLoading(false), 300);
     return () => clearTimeout(timeout);
   }, [searchQuery, selectedContinent, currentPage, pageSize, sortByDistance]);
 
