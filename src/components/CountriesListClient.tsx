@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useMemo, useEffect, useCallback } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { buildSearchUrl } from "@/lib/url";
 import { SearchBar } from "@/components/Searchbar";
 import { ContinentFilters } from "@/components/ContintentFilters";
 import { CountryCard } from "@/components/CountryCard";
@@ -31,37 +32,9 @@ export function CountriesListClient({
   );
   const sortByDistance = searchParams.get("sortByDistance") === "true";
 
-  // Helper function to build URLs while preserving existing parameters
-  const buildUrl = (updates: Record<string, string | number | boolean>) => {
-    const newSearchParams = new URLSearchParams(searchParams.toString());
-
-    Object.entries(updates).forEach(([key, value]) => {
-      if (value === "" || value === false || value === "All") {
-        newSearchParams.delete(key);
-      } else {
-        newSearchParams.set(key, value.toString());
-      }
-    });
-
-    return `?${newSearchParams.toString()}`;
-  };
-
-  const buildUrlCb = useCallback(
-    (updates: Record<string, string | number | boolean>) => {
-      const newSearchParams = new URLSearchParams(searchParams.toString());
-
-      Object.entries(updates).forEach(([key, value]) => {
-        if (value === "" || value === false || value === "All") {
-          newSearchParams.delete(key);
-        } else {
-          newSearchParams.set(key, value.toString());
-        }
-      });
-
-      return `?${newSearchParams.toString()}`;
-    },
-    [searchParams]
-  );
+  // URL building is handled by the shared `buildSearchUrl` helper in `src/lib/url`
+  // which centralizes deletion rules (e.g. drop page=1) and keeps behavior
+  // consistent across components.
 
   const [localQuery, setLocalQuery] = useState(searchQuery);
 
@@ -72,14 +45,19 @@ export function CountriesListClient({
   useEffect(() => {
     const handle = setTimeout(() => {
       if (searchQuery !== localQuery) {
-        router.replace(buildUrlCb({ query: localQuery, page: 1 }), {
-          scroll: false,
-        });
+        router.replace(
+          buildSearchUrl(
+            searchParams,
+            { query: localQuery, page: 1 },
+            { defaultPageSize: DEFAULT_PAGE_SIZE }
+          ),
+          { scroll: false }
+        );
       }
     }, 300);
 
     return () => clearTimeout(handle);
-  }, [localQuery, searchQuery, buildUrlCb, router]);
+  }, [localQuery, searchQuery, router, searchParams]);
 
   const [userLocation, setUserLocation] = useState<{
     lat: number;
@@ -97,9 +75,16 @@ export function CountriesListClient({
     const current = searchParams.get("pageSize");
     const desired = pageSize.toString();
     if (current !== desired) {
-      router.replace(buildUrlCb({ pageSize }), { scroll: false });
+      router.replace(
+        buildSearchUrl(
+          searchParams,
+          { pageSize },
+          { defaultPageSize: DEFAULT_PAGE_SIZE }
+        ),
+        { scroll: false }
+      );
     }
-  }, [pageSize, buildUrlCb, router, searchParams]);
+  }, [pageSize, router, searchParams]);
 
   const filteredCountries = useMemo(() => {
     let filtered = [...initialCountries];
@@ -174,9 +159,16 @@ export function CountriesListClient({
             <GeolocationButton
               onLocation={(lat, lon) => {
                 setUserLocation({ lat, lon });
-                router.replace(buildUrl({ sortByDistance: true, page: 1 }), {
-                  scroll: false,
-                });
+                router.replace(
+                  buildSearchUrl(
+                    searchParams,
+                    { sortByDistance: true, page: 1 },
+                    { defaultPageSize: DEFAULT_PAGE_SIZE }
+                  ),
+                  {
+                    scroll: false,
+                  }
+                );
               }}
               label="Near me"
             />
@@ -185,7 +177,11 @@ export function CountriesListClient({
                 variant={sortByDistance ? "default" : "outline"}
                 onClick={() =>
                   router.replace(
-                    buildUrl({ sortByDistance: !sortByDistance, page: 1 }),
+                    buildSearchUrl(
+                      searchParams,
+                      { sortByDistance: !sortByDistance, page: 1 },
+                      { defaultPageSize: DEFAULT_PAGE_SIZE }
+                    ),
                     {
                       scroll: false,
                     }
@@ -203,9 +199,14 @@ export function CountriesListClient({
         <ContinentFilters
           selected={selectedContinent}
           onSelect={(continent) =>
-            router.replace(buildUrl({ region: continent, page: 1 }), {
-              scroll: false,
-            })
+            router.replace(
+              buildSearchUrl(
+                searchParams,
+                { region: continent, page: 1 },
+                { defaultPageSize: DEFAULT_PAGE_SIZE }
+              ),
+              { scroll: false }
+            )
           }
         />
       </div>
@@ -243,9 +244,14 @@ export function CountriesListClient({
           <Button
             variant="outline"
             onClick={() =>
-              router.replace(buildUrl({ page: Math.max(1, currentPage - 1) }), {
-                scroll: false,
-              })
+              router.replace(
+                buildSearchUrl(
+                  searchParams,
+                  { page: Math.max(1, currentPage - 1) },
+                  { defaultPageSize: DEFAULT_PAGE_SIZE }
+                ),
+                { scroll: false }
+              )
             }
             disabled={currentPage === 1}
           >
@@ -266,9 +272,14 @@ export function CountriesListClient({
                   key={pageNum}
                   variant={currentPage === pageNum ? "default" : "outline"}
                   onClick={() =>
-                    router.replace(buildUrl({ page: pageNum }), {
-                      scroll: false,
-                    })
+                    router.replace(
+                      buildSearchUrl(
+                        searchParams,
+                        { page: pageNum },
+                        { defaultPageSize: DEFAULT_PAGE_SIZE }
+                      ),
+                      { scroll: false }
+                    )
                   }
                   className="w-10"
                 >
@@ -282,10 +293,12 @@ export function CountriesListClient({
             variant="outline"
             onClick={() =>
               router.replace(
-                buildUrl({ page: Math.min(totalPages, currentPage + 1) }),
-                {
-                  scroll: false,
-                }
+                buildSearchUrl(
+                  searchParams,
+                  { page: Math.min(totalPages, currentPage + 1) },
+                  { defaultPageSize: DEFAULT_PAGE_SIZE }
+                ),
+                { scroll: false }
               )
             }
             disabled={currentPage === totalPages}
